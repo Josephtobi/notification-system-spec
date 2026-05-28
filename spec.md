@@ -1,4 +1,4 @@
-# Notification System - Simplified Tech Spec
+# Notification System
 
 **Author:** Joseph Davies  
 **Version:** 1.0
