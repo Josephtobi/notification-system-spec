@@ -1,4 +1,4 @@
-# Notification System — Simplified Tech Spec
+# Notification System - Simplified Tech Spec
 
 **Author:** Joseph Davies  
 **Version:** 1.0
@@ -20,7 +20,7 @@ Our App → Queue (per channel) → Workers → Providers (FCM, Twilio, SendGrid
 Tracking Database (Postgres + Redis)
 
 
-This means if we suddenly need to send a million marketing emails, push and SMS are unaffected—they run in separate queues. If a provider fails, only that channel’s queue slows down, and we switch to the backup automatically.
+This means if we suddenly need to send a million marketing emails, push and SMS are unaffected-they run in separate queues. If a provider fails, only that channel’s queue slows down, and we switch to the backup automatically.
 
 ---
 
@@ -50,7 +50,7 @@ Workers are small programs that constantly listen to a queue. For each message, 
 - If all retries fail, move the message to a "dead letter" area for human review
 
 ### 4. Delivery Tracker (Postgres + Redis)
-- **PostgreSQL** stores the entire life story of every notification—when it was created, every status change, and the final outcome. This is our permanent audit trail.
+- **PostgreSQL** stores the entire life story of every notification-when it was created, every status change, and the final outcome. This is our permanent audit trail.
 - **Redis** holds a fast, temporary list of recently processed `notification_id`s. The workers check this list before calling any provider. Entries expire after a while because once a message is confirmed delivered, we don't need to check it forever.
 
 ### 5. Dead Letter Queue (emergency holding area)
@@ -91,7 +91,7 @@ Workers keep track of recent failures in Redis. If a provider racks up too many 
 - **No missed sends:** Messages stay in the queue until they are successfully processed, or they end up in the dead letter queue for a human to handle. Nothing is silently lost.
 - **No duplicates:** The Redis check before every provider call guarantees each notification is sent exactly once.
 - **No lost data on worker crashes:** A message is only removed from the queue after the worker has written a final delivery status to the database. If a worker dies mid-send, the queue will hand the message to another worker.
-- **Full traceability:** For any notification, we can see exactly what happened and when—useful for debugging and compliance.
+- **Full traceability:** For any notification, we can see exactly what happened and when-useful for debugging and compliance.
 
 ---
 
